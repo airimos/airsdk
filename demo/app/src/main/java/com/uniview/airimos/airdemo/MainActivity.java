@@ -11,9 +11,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.uniview.airimos.airsdk.Airimos;
+import com.uniview.airimos.airsdk.UNV;
 import com.uniview.airimos.airsdk.bean.ChannelInfo;
 import com.uniview.airimos.airsdk.bean.ErrorInfo;
+import com.uniview.airimos.airsdk.bean.PtzParameter;
 import com.uniview.airimos.airsdk.bean.RecordInfo;
 import com.uniview.airimos.airsdk.def.Constants;
 import com.uniview.airimos.airsdk.listener.OnLoginListener;
@@ -23,6 +24,7 @@ import com.uniview.airimos.airsdk.widget.PlayView;
 
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class MainActivity extends ActionBarActivity
 {
@@ -49,17 +51,14 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onClick(View v)
             {
-                Airimos.login(inputIp.getText().toString(), 80, "admin", "admin", new OnLoginListener()
-                {
+                UNV.login(inputIp.getText().toString(), 80, "admin", "admin", new OnLoginListener() {
                     @Override
-                    public void onLoginFailed(ErrorInfo error)
-                    {
+                    public void onLoginFailed(ErrorInfo error) {
                         Toast.makeText(MainActivity.this, "登录失败，" + error.getErrorDesc(), Toast.LENGTH_LONG).show();
                     }
 
                     @Override
-                    public void onLoginComplete(String session, List<ChannelInfo> channels)
-                    {
+                    public void onLoginComplete(String session, List<ChannelInfo> channels) {
                         mDeviceSession = session;
 
                         mDeviceChannels = new ArrayList<ChannelInfo>(channels);
@@ -76,7 +75,7 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onClick(View v)
             {
-                Airimos.playLive(mDeviceSession, mDeviceChannels.get(0).getResCode(), new OnPlayListener()
+                UNV.playLive(mDeviceSession, mDeviceChannels.get(0).getResCode(), new OnPlayListener()
                 {
                     @Override
                     public void onPlayFailed(ErrorInfo error)
@@ -103,7 +102,7 @@ public class MainActivity extends ActionBarActivity
             public void onClick(View v)
             {
                 mPlayView.stop();
-                Airimos.stopPlayLive(mDeviceSession, mPlaySession, null);
+                UNV.stopPlayLive(mDeviceSession, mPlaySession, null);
             }
         });
 
@@ -116,12 +115,12 @@ public class MainActivity extends ActionBarActivity
             {
                 if (left.getText().equals("停"))
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.LEFT_STOP, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.LEFT_STOP), null);
                     left.setText("左");
                 }
                 else
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.LEFT, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.LEFT, 9, 0), null);
                     left.setText("停");
                 }
             }
@@ -135,12 +134,12 @@ public class MainActivity extends ActionBarActivity
             {
                 if (right.getText().equals("停"))
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.RIGHT_STOP, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.RIGHT_STOP), null);
                     right.setText("右");
                 }
                 else
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.RIGHT, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.RIGHT, 1, 0), null);
                     right.setText("停");
                 }
             }
@@ -155,12 +154,12 @@ public class MainActivity extends ActionBarActivity
             {
                 if (up.getText().equals("停"))
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.UP_STOP, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.UP_STOP), null);
                     up.setText("上");
                 }
                 else
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.UP, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.UP, 0, 3), null);
                     up.setText("停");
                 }
             }
@@ -174,12 +173,12 @@ public class MainActivity extends ActionBarActivity
             {
                 if (down.getText().equals("停"))
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.DOWN_STOP, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.DOWN_STOP), null);
                     down.setText("下");
                 }
                 else
                 {
-                    Airimos.ptzCtrl(mDeviceSession, mDeviceChannels.get(0).getResCode(), Constants.PTZ_CMD.DOWN, null);
+                    UNV.ptzCtrl(mDeviceSession, mDeviceChannels.get(1).getResCode(), new PtzParameter(Constants.PTZ_CMD.DOWN, 0, 3), null);
                     down.setText("停");
                 }
             }
@@ -191,7 +190,7 @@ public class MainActivity extends ActionBarActivity
             @Override
             public void onClick(View v)
             {
-                Airimos.queryRecords(mDeviceSession, mDeviceChannels.get(0).getResCode(), "2015-03-06 00:00:00", "2015-03-06 23:59:59", new QueryRecordListener()
+                UNV.queryRecords(mDeviceSession, mDeviceChannels.get(0).getResCode(), "2015-03-06 00:00:00", "2015-03-06 23:59:59", new QueryRecordListener()
                 {
                     @Override
                     public void onQueryFailed(ErrorInfo error)
@@ -204,7 +203,7 @@ public class MainActivity extends ActionBarActivity
                     {
                         Log.d("123", "onQueryComplete:" + records.toString());
 
-                        Airimos.playRecord(mDeviceSession, mDeviceChannels.get(0).getResCode(), records.get(0), "2015-03-06 08:00:00", new OnPlayListener()
+                        UNV.playRecord(mDeviceSession, mDeviceChannels.get(0).getResCode(), records.get(0), "2015-03-06 08:00:00", new OnPlayListener()
                         {
                             @Override
                             public void onPlayFailed(ErrorInfo error)
@@ -232,7 +231,7 @@ public class MainActivity extends ActionBarActivity
             public void onClick(View v)
             {
                 mPlayView.stop();
-                Airimos.stopPlayRecord(mDeviceSession, mPlaySession, null);
+                UNV.stopPlayRecord(mDeviceSession, mPlaySession, null);
             }
         });
     }
