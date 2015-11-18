@@ -37,7 +37,7 @@ dependencies {
 ### 初始化
 在Application类中初始化库文件：
 ```
-Airimos.init(getApplicationContext());
+UNV.init(getApplicationContext());
 ```
 
 ### 用户登录、登出
